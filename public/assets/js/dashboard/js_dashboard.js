@@ -1,14 +1,11 @@
 $(document).ready(function () {
 
-    $('#tabs_profile').click('leaveauth', function (event, ui) {
-	    isDelete= false;
-		isEdit = false;
+    // $('#tabs_profile').click('leaveauth', function (event, ui) {
+	//     isDelete= false;
+	// 	isEdit = false;
 
-		var oTable2 = $('#dtbldept').dataTable();
-		$(oTable2.fnSettings().aoData).each(function (){
-		$(this.nTr).removeClass('success');
-		});
-    });
+	// 	var oTable2 = $('#dtbldept').dataTable();
+    // });
 
     var dtbldept = $('#dtbldept').DataTable({
 		"sAjaxSource":  "GET_DEPT_LIST",
@@ -24,10 +21,9 @@ $(document).ready(function () {
         "pageLength": 7, 
 		"sDom":"<'row'<'col-xs-4'i><'col-xs-4'l><'col-xs-4'f>r>t<'row'<'col-xs-8' <'row' <'col-xs-8 deptgroupbutton' >>><'col-xs-4'p>>",
 		"aoColumns": [
-						
-            { "data": "sl_no" },
-            { "data": "dept_name","sWidth":"30%"},
-            { "data": "dept_type"},
+			{ "data": "sl_no", "className": "text-center"},
+            { "data": "dept_name","sWidth":"30%", "className": "text-center"},
+            { "data": "dept_type", "className": "text-center"},
         ]
 	});
 	
@@ -41,8 +37,9 @@ $(document).ready(function () {
 		$('#hidDeptname').val('');
 		$('#txtdescriptiondept').val('');
 		$('#cmbdeptType').val('');
-
+		$('#frmdept')[0].reset();
 		$('#divModaldept').modal('show');
+		$('#cmbdeptType').prop('disabled', false);
 	});
 
 
@@ -69,73 +66,118 @@ $(document).ready(function () {
 					$('#divModaldept').modal('hide');
 					var dtbldept = $("#dtbldept").DataTable();
 			 		dtbldept.ajax.reload(null, false);
+					$('#dtbldept tbody tr').removeClass('table-success');
+
 				}
 				else if (result.dbStatus === 'FAILURE') {
 					toastr.error(result.dbMessage);
 					$('#divModaldept').modal('hide');
+					var dtbldept = $("#dtbldept").DataTable();
+					$('#dtbldept tbody tr').removeClass('table-success');
+
 				}
 				else if (result.dbStatus === 'EXIST') {
 					toastr.error(result.dbMessage);
 					$('#divModaldept').modal('hide');
+					var dtbldept = $("#dtbldept").DataTable();
+					$('#dtbldept tbody tr').removeClass('table-success');
+
 				}
 				else if (result.dbStatus === 'NOT_VALID') {
 					toastr.error(result.dbMessage);
 					$('#divModaldept').modal('hide');
+					var dtbldept = $("#dtbldept").DataTable();
+					$('#dtbldept tbody tr').removeClass('table-success');
+
 				}
 			},
-			error:function(responsedata)
-			{
-
+			error:function(){
+				toastr.error('Unable to process please contact support');
 			}
 		});
 	});
 
 	/* Edit Department */
+	var selectedRowData = null;
+
+	$('#dtbldept tbody').on('click', 'tr', function () {
+		$('#dtbldept tbody tr').removeClass('table-success');
+
+		$(this).addClass('table-success');
+
+		var table = $('#dtbldept').DataTable();
+		selectedRowData = table.row(this).data();
+	});
+
 	$('#depteditbtn').click(function () {
 
-		if (isEdit) {
-
-			$("#lblModalDept").html('UPDATE');
-			$("#deptbtnSave").html('<i class="fa fa-pencil"></i> Update');
-
-			$('#divModaldept').modal('show');
-
-		} else {
-			toastr.error("Please select a record");
+		if (selectedRowData == null) {
+			toastr.error('Please select a row first');
+			return;
 		}
+
+		$('#cmbdeptType').prop('disabled', true);
+		$('#lblModalDept').html('EDIT');
+		$('#deptbtnSave').html('<i class="fa fa-edit"></i> Update');
+
+		// Fill form fields
+		$('#hidcodedept').val(selectedRowData.dept_code);
+		$('#txtdescriptiondept').val(selectedRowData.dept_name);
+		$('#cmbdeptType').val(selectedRowData.dept_type);
+
+		// Open modal
+		$('#divModaldept').modal('show');
 	});
 
-	$('#dtbldept').DataTable().on( 'search.dt', function () {
-	    isEdit = false;	
-		isDelete = false;
-		var oTable = $('#dtbldept').dataTable();
-		$(oTable.fnSettings().aoData).each(function (){
-			$(this.nTr).removeClass('success');
+	$('#deptdeletebtn').click(function (){
+		if (selectedRowData == null) {
+			toastr.error('Please select a row first');
+			return;
+		}
+		var oper = 'DeleteDept';
+		Swal.fire({
+			title: 'Are you sure you want to delete?',
+			text: "This action cannot be undone!",
+			icon: 'warning',       
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!',
+			cancelButtonText: 'Cancel',
+			reverseButtons: true,
+			allowOutsideClick: false,
+			width: 450,
+    		padding: '2rem', 
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					url:oper,
+					type:'POST',
+					data:{id:selectedRowData.id},
+					headers: {
+						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+					},
+					success: function(result){
+						if(result.dbStatus == 'SUCCESS'){
+							toastr.success(result.dbMessage);
+							var dtbldept = $("#dtbldept").DataTable();
+							dtbldept.ajax.reload(null, false);
+							$('#dtbldept tbody tr').removeClass('table-success');
+						}
+						else if (result.dbStatus == 'FAILURE'){
+							toastr.error(result.dbMessage);
+							var dtbldept = $("#dtbldept").DataTable();
+							$('#dtbldept tbody tr').removeClass('table-success');
+						}
+					},
+					error:function(){
+						toastr.error('Unable to process please contact support');
+					}
+				})
+			}
 		});
-	});
 
-	$('#dtbldept tbody').on('click','tr' ,function (event) {
-		var fdata = $('#dtbldept').dataTable().fnGetData(this);
-		console.log(fdata);
-		if(fdata != null)
-		{
-			var data = dtbldept.row(this).data();
-			isEdit = true;	
-			isDelete = true;
-			var oTable = $('#dtbldept').dataTable();			
-				$(oTable.fnSettings().aoData).each(function (){
-				$(this.nTr).removeClass('success');
-			});
-			
-			$(event.target.parentNode).addClass('success');
-			$('#hidcodedept').val(data.dept_code);//GETTING VALUE FOR HIDDEN COLUMN
-			$('#hidDeptname').val(data.dept_name);//GETTING VALUE FOR HIDDEN COLUMN
-			$('#txtcodedept').val(data.dept_code);
-			$('#txtdescriptiondept').val(data.dept_name);
-			
-		}
 	});
-
 
 
 });

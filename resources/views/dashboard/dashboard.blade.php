@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     @include('includes.header')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <body>
@@ -52,6 +53,7 @@
                                                 <th class="text-center">Sl No.</th>
                                                 <th class="text-center">Department</th>
                                                 <th class="text-center">Department Type</th>
+                                                <th class="text-center" hidden>Dept Code</th>
                                             </tr>
                                         </thead>
                                         <tbody id="deptTable"></tbody>
@@ -96,8 +98,15 @@
                                                         Department Type <span class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-sm-8">
-                                                        <input type="text" class="form-control"
-                                                            id="cmbdeptType" name="cmbdeptType">
+                                                         <select class="form-control tooltips" id="cmbdeptType" name="cmbdeptType">
+                                                            <option value="">SELECT</option>
+                                                                <?php
+                                                                    foreach ($dep_type as $key=>$value)
+                                                                    {
+                                                                        echo '<option value="'.$value->dept_code.'">'.$value->dept_type.'</option>';
+                                                                    }
+                                                                ?>
+                                                        </select>
                                                     </div>
                                                 </div>
 

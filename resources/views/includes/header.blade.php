@@ -23,8 +23,12 @@
 <!-- Bootstrap Validator -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
 
-<!-- SweetAlert -->
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<!-- SweetAlert2 CSS (optional, styles the popups) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
 
 <!-- Toastr -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -33,6 +37,7 @@
 <!-- Custom CSS -->
 <link rel="stylesheet" href="{{ asset('assets/css/sidebar.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/navbar.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 
 <!-- Custom JS -->
 <script src="{{ asset('assets/js/sidebar.js') }}"></script>
