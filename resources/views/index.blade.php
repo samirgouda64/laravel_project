@@ -221,9 +221,6 @@
                         company:company,
                         _token:token
                     },
-                    beforeSend: function () {
-                        $('#btnLogIn').prop('disabled', true);
-                    },
                     success:function(result){
                         if(result.dbStatus ==  'SUCCESS'){
                             toastr.success(result.dbMessage);

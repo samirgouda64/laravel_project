@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Session;
 
 class IndexController extends Controller
 {
@@ -27,34 +28,52 @@ class IndexController extends Controller
 
     public function postLogin(Request $request)
     {
-        // 1️⃣ Validate input
         $request->validate([
             'username' => 'required',
             'password' => 'required',
             'company'  => 'required'
         ]);
 
-        // 2️⃣ Fetch user using DB (NO Student model)
         $user = DB::table('users.user_master')
             ->where('username', $request->username)
             ->where('company_code', $request->company)
             ->where('status', 1)
             ->first();
 
-        // 3️⃣ User not found
-        if (!$user) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'User not found'
-            ], 401);
-        }
+        if ($user && Hash::check($request->password, $user->password)) {
+            Session::put('user_code', $user->user_code);
+            Session::put('username', $user->username);
+            Session::put('company_code', $user->company_code);
+            // Session::put('email', $user->email);
+            Session::put('role', $user->role);
 
-        // 4️⃣ Password check (bcrypt)
-        if (!Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Invalid password'
-            ], 401);
+            $url = '/dashboard';
+            $output['dbStatus'] = 'SUCCESS';
+            $output['dbMessage'] = 'You are redirect to dashboard...';
+            $output['redirect_url'] = $url;
+        } else {
+            $output['dbStatus'] = 'FAILURE';
+            $output['dbMessage'] = '..Invalid credential....';
         }
+        return response()->json($output);
+
+    }
+
+    public function logout(Request $request){
+        Session::forget('user_code');
+        Session::forget('user_name');
+        Session::forget('company_code');
+
+        // if ($decrpt_role_code == "RLSUPADM" || $decrpt_role_code == 'RLSYSADM') {
+        //     $page = "/su_login";
+        // } else {
+        //     $page = "/";
+        // }
+
+        $page = "/";
+        $output['dbStatus'] = 'SUCCESS';
+        $output['dbMessage'] = 'You are successfully logout';
+        $output['redirect_url'] = $page;
+        return response()->json($output);
     }
 }

@@ -147,7 +147,7 @@ $(document).ready(function () {
 			reverseButtons: true,
 			allowOutsideClick: false,
 			width: 450,
-    		padding: '2rem', 
+    		padding: '2rem'
 		}).then((result) => {
 			if (result.isConfirmed) {
 				$.ajax({
@@ -173,7 +173,7 @@ $(document).ready(function () {
 					error:function(){
 						toastr.error('Unable to process please contact support');
 					}
-				})
+				});
 			}
 		});
 
