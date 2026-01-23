@@ -40,6 +40,12 @@ class IndexController extends Controller
             ->where('status', 1)
             ->first();
 
+        if(!$user){
+            $output['dbStatus'] = 'FAILURE';
+            $output['dbMessage'] = 'User not Found';
+            return response()->json($output);
+        }
+
         if ($user && Hash::check($request->password, $user->password)) {
             Session::put('user_code', $user->user_code);
             Session::put('username', $user->username);
@@ -75,9 +81,5 @@ class IndexController extends Controller
         $output['dbMessage'] = 'You are successfully logout';
         $output['redirect_url'] = $page;
         return response()->json($output);
-    }
-
-    public function showForgetPassword(Request $request){
-        return view('forgetPassword');
     }
 }

@@ -152,7 +152,7 @@
 										</select>
 									</div>
 									<button type="submit" id="btnLogIn" name="btnLogIn">Login</button>
-									<a href="forgotPassword.php">Forget Password ?</a>
+									<a href="{{ url('/showForgetPassword') }}">Forgot Password?</a>
 								</form>&nbsp;
 								<div class='col-sm-12 col-lg-12 col-md-12'>
 									<center>
@@ -236,7 +236,9 @@
                 var password = $('#password').val();
                 var company = $('#cmbCompany').val();
                 let token    = $('input[name="_token"]').val();
-                
+
+                $("#btnLogIn").html('<i class="fa fa-cog fa-spin"></i> Login...');
+
                 $.ajax({
                     url:'/postLogin',
                     type:'POST',
@@ -249,11 +251,11 @@
                     success:function(result){
                         if(result.dbStatus ==  'SUCCESS'){
                             toastr.success(result.dbMessage);
-                            $("#btnLogIn").html('<i class="fa fa-cog fa-spin"></i> Login...');
+                            $("#btnLogIn").html('Login');
                             window.location.href = result.redirect_url;
                         } else if (result.dbStatus == 'FAILURE'){
                             toastr.error(result.dbMessage);
-                            $("#btnLogIn").html('<i class="fa fa-cog fa-spin"></i> Login...');
+                            $("#btnLogIn").html('Login');
                         }
                     },
                     error: function () {
@@ -286,6 +288,12 @@
                 if(key == 13){
                     login();
                 }
+            });
+
+            $(document).keydown(function (event) {
+                $('#password').on("cut copy paste",function(e) {
+                    e.preventDefault();
+                });
             });
 
 		});
