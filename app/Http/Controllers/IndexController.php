@@ -76,4 +76,8 @@ class IndexController extends Controller
         $output['redirect_url'] = $page;
         return response()->json($output);
     }
+
+    public function showForgetPassword(Request $request){
+        return view('forgetPassword');
+    }
 }

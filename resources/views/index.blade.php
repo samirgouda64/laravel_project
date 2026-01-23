@@ -207,6 +207,31 @@
 
             function login(){
 
+                let hasError = false;
+
+                if ($('#username').val() == '') {
+                    toastr.error("Please enter the Username");
+                    if (!hasError) $('#username').focus();
+                    hasError = true;
+                }
+
+                if ($('#password').val() == '') {
+                    toastr.error("Please enter the password");
+                    if (!hasError) $('#password').focus();
+                    hasError = true;
+                }
+
+                if ($('#cmbCompany').val() == '') {
+                    toastr.error("Please choose the Company");
+                    if (!hasError) $('#cmbCompany').focus();
+                    hasError = true;
+                }
+
+                if (hasError) {
+                    return false;
+                }
+
+
                 var username = $('#username').val();
                 var password = $('#password').val();
                 var company = $('#cmbCompany').val();
@@ -224,9 +249,11 @@
                     success:function(result){
                         if(result.dbStatus ==  'SUCCESS'){
                             toastr.success(result.dbMessage);
+                            $("#btnLogIn").html('<i class="fa fa-cog fa-spin"></i> Login...');
                             window.location.href = result.redirect_url;
                         } else if (result.dbStatus == 'FAILURE'){
                             toastr.error(result.dbMessage);
+                            $("#btnLogIn").html('<i class="fa fa-cog fa-spin"></i> Login...');
                         }
                     },
                     error: function () {
@@ -238,7 +265,28 @@
             $('#loginform').on('submit', function(e){
                 e.preventDefault();
                 login();
-            })
+            });
+
+            $('#username').keydown(function(e){
+                let key = e.which;
+                if(key == 13){
+                    login();
+                }
+            });
+
+            $('#password').keydown(function(e){
+                let key = e.which;
+                if(key == 13){
+                    login();
+                }
+            });
+
+            $('#cmbCompany').keydown(function(e){
+                let key = e.which;
+                if(key == 13){
+                    login();
+                }
+            });
 
 		});
 	</script>
