@@ -1,117 +1,29 @@
-<style>
-
-.custom-btn-left,
-.custom-btn-right {
-    background-color: #f8f9fa;  
-    border: 1px solid #ddd;     
-    color: #333;              
-    padding: 6px 12px;
-    border-radius: 5px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.custom-btn-left:hover,
-.custom-btn-right:hover {
-    background-color: #007bff;  
-    color: #fff;                
-    transform: translateY(-2px);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-.custom-btn-left:hover {
-    background-color: #28a745; 
-}
-
-.navbar-right .user-menu > a {
-    display: flex;
-    align-items: center;
-    padding: 8px 12px;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-}
-.navbar-right .user-menu > a:hover {
-    background-color: #1a2732;
-    border-radius: 4px;
-}
-.navbar-right .user-menu img {
-    border-radius: 50%;
-    margin-right: 8px;
-    width: 32px;
-    height: 32px;
-    object-fit: cover;
-    border: 2px solid #fff;
-}
-.navbar-right .user-menu .dropdown-menu {
-    width: 250px;
-    border-radius: 6px;
-    padding: 0;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-}
-.user-header {
-    text-align: center;
-    padding: 15px;
-    color: #fff;
-    background: linear-gradient(135deg, #3498db, #2980b9);
-}
-.user-header img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 3px solid #fff;
-    margin-bottom: 10px;
-}
-.user-header p {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.4;
-}
-.user-footer {
-    padding: 10px;
-    background: #f9f9f9;
-    display: flex;
-    justify-content: space-between;
-}
-.user-footer a.btn {
-    font-size: 13px;
-    padding: 5px 10px;
-    border-radius: 4px;
-    color: #333;
-    text-decoration: none;
-}
-.user-footer a.btn:hover {
-    background-color: #3498db;
-    color: #fff;
-    border-color: #3498db;
-}
-.user-menu span {
-    margin-left: 5px;
-    font-weight: 600;
-    color: #fff;
-}
-.user-menu .caret {
-    margin-left: 3px;
-}
-</style>
-
-
 <!-- Navigation Bar -->
 <div id="navbar" class="fixed-header">
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
-
+            <div class="navbar-header">
+                <span class="navbar-logo">
+                    <img src="{{ session('profile_image_url') }}" style="width:20px;height:20px" alt="User Image" />
+                </span>
+            </div>
+            <div class="navbar-header">
+                <span class="navbar-company">
+                    Company Name
+                </span>
+            </div>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="{{ asset('assets/images/profile_16.png') }}" style="width:20px;height:20px" alt="User Image" />
-                        <span>{{ session('username') }} ({{ session('role') }})<i class="caret"></i></span>
+                        <img src="{{ session('profile_image_url') }}" style="width:20px;height:20px" alt="User Image" />
+                        <span>{{ session('display_name') }} ({{ session('role_type') }})<i class="caret"></i></span>
                     </a>
                     <ul class="dropdown-menu" style="height: auto">
                         <li class="user-header bg-light-blue">
-                            <img src="{{ asset('assets/images/profile_16.png') }}" class="img-circle" alt="User Image" />
+                            <img src="{{ session('profile_image_url') }}" class="img-circle" alt="User Image" />
                             <p>
-                                {{ session('username') }}<br />
-                                {{ session('role') }}
+                                {{ session('display_name') }}<br />
+                                {{ session('role_type') }}
                             </p>
                         </li>
                         <li class="user-footer">
@@ -151,14 +63,151 @@
                     <span>Dashboard</span>
                 </a>
             </li>
+            <!-- For HR -->
 
-            <li id="viewUsersBtn">
-                <a href="#">
+            @if(session('role_code') == 'RLADMIN' || session('role_code') == 'RLHR')
+            <li class="has-submenu">
+                <a href="#" class="toggle-submenu">
                     <i class="fa fa-users"></i>
-                    <span>Users</span>
+                    <span>HRMS</span>
+                    <i class="fa fa-chevron-right submenu-icon"></i>
                 </a>
+
+                <ul class="submenu">
+
+                    <!-- HR SETUP -->
+                    <li class="has-submenu">
+                        <a href="#" class="toggle-submenu">
+                            <i class="fa fa-cogs"></i>
+                            <span>HR Setup</span>
+                            <i class="fa fa-chevron-right submenu-icon"></i>
+                        </a>
+
+                        <ul class="submenu">
+                            <li>
+                                <a href="/hr/setup/employee">
+                                    <i class="fa fa-id-card"></i> Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/hr/setup/department">
+                                    <i class="fa fa-plane"></i> Leave
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/hr/setup/designation">
+                                    <i class="fa fa-calendar-check-o"></i> Attendance
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- HR ACTIVITY -->
+                    <li class="has-submenu">
+                        <a href="#" class="toggle-submenu">
+                            <i class="fa fa-tasks"></i>
+                            <span>HR Activity</span>
+                            <i class="fa fa-chevron-right submenu-icon"></i>
+                        </a>
+
+                        <ul class="submenu">
+                            <li>
+                                <a href="/hr/activity/joining">
+                                    <i class="fa fa-user-plus"></i> Joining
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/hr/activity/profile">
+                                    <i class="fa fa-id-card"></i> Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/hr/activity/leave">
+                                    <i class="fa fa-plane"></i> Leave
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/hr/activity/attendance">
+                                    <i class="fa fa-calendar-check-o"></i> Attendance
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
             </li>
+            @endif
+
+            <!-- For Employees -->
+            @if(session('role_code') == 'RLADMIN' || session('role_code') == 'RLEMPLOYEE')
+            <li class="has-submenu">
+                <a href="#" class="toggle-submenu">
+                    <i class="fa fa-users"></i>
+                    <span>HRMS(Employee)</span>
+                    <i class="fa fa-chevron-right submenu-icon"></i>
+                </a>
+
+                <ul class="submenu">
+
+                    <!-- Employee Activity -->
+                    <li class="has-submenu">
+                        <a href="#" class="toggle-submenu">
+                            <i class="fa fa-cogs"></i>
+                            <span>Activity</span>
+                            <i class="fa fa-chevron-right submenu-icon"></i>
+                        </a>
+
+                        <ul class="submenu">
+                            <li>
+                                <a href="/hr/setup/employee">
+                                    <i class="fa fa-id-card"></i> Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/hr/setup/department">
+                                    <i class="fa fa-plane"></i> Leave
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/hr/setup/designation">
+                                    <i class="fa fa-calendar-check-o"></i> Attendance
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Employee Reports -->
+                    <li class="has-submenu">
+                        <a href="#" class="toggle-submenu">
+                            <i class="fa fa-tasks"></i>
+                            <span>Reports</span>
+                            <i class="fa fa-chevron-right submenu-icon"></i>
+                        </a>
+
+                        <ul class="submenu">
+                            <li>
+                                <a href="/hr/activity/joining">
+                                    <i class="fa fa-money"></i> salary Slip
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/hr/activity/profile">
+                                    <i class="fa fa-bar-chart"></i> Employee Report
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/hr/activity/leave">
+                                    <i class="fa fa-envelope"></i> Mail Contact
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </li>
+            @endif
         </ul>
+
     </div>
 </div>
 
@@ -178,7 +227,31 @@ $(document).ready(function(){
 			error:function(){
 				toastr.error('Unable to process please contact support');
 			}
-		})
-	})
+		});
+	});
+
+    // Hide all submenus initially
+    $('.sidebar .submenu').hide();
+
+    // MULTI-LEVEL SUBMENU TOGGLE (FIXED)
+    $(document).on('click', '.toggle-submenu', function (e) {
+        e.preventDefault();
+
+        let parentLi = $(this).parent('.has-submenu');
+        let currentSubmenu = parentLi.children('.submenu');
+
+        // Close ONLY same-level siblings
+        parentLi
+            .siblings('.has-submenu')
+            .removeClass('open')
+            .children('.submenu')
+            .slideUp(200);
+
+        // Toggle current submenu
+        parentLi.toggleClass('open');
+        currentSubmenu.slideToggle(200);
+    });
+
+    
 })
 </script>

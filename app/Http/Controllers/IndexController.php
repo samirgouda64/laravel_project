@@ -50,10 +50,20 @@ class IndexController extends Controller
             Session::put('user_code', $user->user_code);
             Session::put('username', $user->username);
             Session::put('company_code', $user->company_code);
-            // Session::put('email', $user->email);
-            Session::put('role', $user->role);
+            $role_code = $user->role_code;
+            Session::put('role_code', $role_code);
+            Session::put('role_type', $user->role_type);
+            Session::put('user_type', $user->user_type);
+            Session::put('display_name', $user->display_name);
+            Session::put('profile_image_url', $user->profile_image_url);
 
-            $url = '/dashboard';
+            if($role_code == 'RLHR'){
+                $url = 'hr/dashboard';
+            } else if($role_code == 'RLEMPLOYEE'){
+                $url = 'employee/dashboard';
+            } else {
+                $url = '/dashboard';
+            }
             $output['dbStatus'] = 'SUCCESS';
             $output['dbMessage'] = 'You are redirect to dashboard...';
             $output['redirect_url'] = $url;

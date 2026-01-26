@@ -7,6 +7,10 @@ body {
     background-color: #4b6cb7;
     background-image: linear-gradient(to right, #4b6cb7, #182848);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 8px 15px;
+    border: none;
+    margin-bottom: 0 !important;
+    border-radius: 0 !important;
 }
 
 .navbar-brand {
@@ -119,3 +123,58 @@ body {
     color: blue;
     background-color: white;
 }
+
+.navbar .user-menu > a {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    color: #f9fafb;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.navbar .user-menu > a:hover {
+    background-color: #374151;
+}
+
+.navbar .user-menu img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin-right: 8px;
+    object-fit: cover;
+    border: 2px solid #f9fafb;
+}
+
+
+.navbar .navbar-right .user-menu .dropdown-menu {
+    width: 260px;
+    border-radius: 10px;
+    padding: 0;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+
+.navbar-company {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 18px;
+    margin-left: 25px;
+    display: inline-block;
+    transition: margin-left 0.3s ease;
+    margin-top: 8px;
+}
+.navbar-logo {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 18px;
+    display: inline-block;
+    transition: margin-left 0.3s ease;
+    margin-top: 8px;
+    width: 210px;
+    text-align: center;
+}
+
